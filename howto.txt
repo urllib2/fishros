@@ -1,0 +1,22 @@
+docker run -dit \
+    --name=fishros \
+    --privileged \
+    --gpus all \
+    -e NVIDIA_DRIVER_CAPABILITIES=all \
+    -e NVIDIA_VISIBLE_DEVICES=all \
+    -e DISPLAY=$DISPLAY \
+    -e QT_X11_NO_MITSHM=1 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    -v /home/ros/fishros:/home/ros/workspace:rw \
+    -w /home/ros/workspace \
+    osrf/ros:jazzy-desktop-full
+    
+    
+ # Source the main ROS environment
+docker exec -it fishros /bin/bash -c "echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc"
+
+# Source your workspace (once you build it)
+docker exec -it fishros /bin/bash -c "echo 'if [ -f /home/ros/workspace/install/setup.bash ]; then source /home/ros/workspace/install/setup.bash; fi' >> ~/.bashrc"
+
+
+docker exec -it fishros bash
